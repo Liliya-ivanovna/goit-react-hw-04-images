@@ -5,16 +5,16 @@ import PropTypes from 'prop-types';
 import Notiflix from 'notiflix';
 
 export const Searchbar = ({ onSubmit }) => {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [inputValue, setInputValue] = useState('');
 
   const onHandleSubmit = e => {
     e.preventDefault();
-    if (searchQuery.trim() === '') {
+    if (inputValue.trim() === '') {
       Notiflix.Report.info('Please!', 'Enter your search query!', 'Ok');
       return;
     } 
-      onSubmit(searchQuery);
-      setSearchQuery('');
+      onSubmit(inputValue);
+      setInputValue('');
   };
 
   return (
@@ -32,7 +32,7 @@ export const Searchbar = ({ onSubmit }) => {
           autoFocus
           placeholder="Search images and photos"
           name="queryInput"
-          onChange={e => setSearchQuery(e.target.value)}
+          onChange={e => setInputValue(e.target.value)}
         />
       </Form>
     </Header>

@@ -29,9 +29,8 @@ export const App = () => {
             'Wonderful!',
             `We found ${data.totalHits} images!`,
             'Continue'
-          );
-        }
-        setTimeout(() => scroll(), 100);
+          )}else{ setTimeout(() => scroll(), 100);}
+       
 
         if (data.hits.length === 0) {
           Notiflix.Report.warning(
@@ -60,11 +59,12 @@ export const App = () => {
     fetchData();
   }, [page, searchQuery]);
 
-  const onSubmit = searchQuery => {
-    setSearchQuery(searchQuery);
+  const onSubmit = inputValue => {
+    if(searchQuery!==inputValue){
+    setSearchQuery(inputValue);
     setPage(1);
     setHits([]);
-  };
+  }};
 
   const scroll = () => {
     const { clientHeight } = document.documentElement;
