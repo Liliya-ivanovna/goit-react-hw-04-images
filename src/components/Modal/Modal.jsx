@@ -13,14 +13,6 @@ export const Modal = ({ onClose, largeImageURL, tags }) => {
       }
     };
     window.addEventListener('keydown', handleKeyDown);
-  }, [onClose]);
-
-  useEffect(() => {
-    const handleKeyDown = e => {
-      if (e.code === 'Escape') {
-        onClose();
-      }
-    };
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
