@@ -1,31 +1,22 @@
 import {Modal} from "../Modal/Modal";
-import { Component } from "react";
+import { useState } from "react";
 import { Li, Img } from "./ImageGalleryItem.styled";
 import PropTypes from 'prop-types';
 
-export class GalleryItem extends Component{
- 
-    state={
-        showModal: false,
-    }
+export const GalleryItem=({hit})=>{
+ const[showModal, setShowModal]= useState(false);
+const {largeImageURL,webformatURL,tags}=hit;
 
-    toggleModal=()=> this.setState((prevState=>({
-        showModal: !prevState.showModal})));
-
-render(){
-    const {showModal}=this.state;
-    const {webformatURL,largeImageURL,tags}=this.props.hit;
-  return (<>
-  <Li onClick={this.toggleModal}>
+return (<>
+  <Li onClick={()=> setShowModal(showModal=>!showModal)}>
         <Img src={webformatURL} alt={tags} loading="lazy"/>
     </Li>
     {showModal &&(<Modal
-          onClose={this.toggleModal}
+          onClose={()=> setShowModal(showModal=>!showModal)}
           largeImageURL={largeImageURL}
           tags={tags}/>)}
     </>
-   )}
-};
+   )};
 
 GalleryItem.propTypes={
     hit: PropTypes.shape({

@@ -1,54 +1,44 @@
-import {Header,Form,Button, Label, Input} from './Searchbar.styled';
-import {Component} from 'react';
-import {ImSearch} from 'react-icons/im';
-import PropTypes from "prop-types";
+import { Header, Form, Button, Label, Input } from './Searchbar.styled';
+import { useState } from 'react';
+import { ImSearch } from 'react-icons/im';
+import PropTypes from 'prop-types';
 import Notiflix from 'notiflix';
 
-export class Searchbar extends Component{
+export const Searchbar = ({ onSubmit }) => {
+  const [searchQuery, setSearchQuery] = useState('');
 
-  static propTypes={
- onSubmit: PropTypes.func.isRequired,
+  const onHandleSubmit = e => {
+    e.preventDefault();
+    if (searchQuery.trim() === '') {
+      Notiflix.Report.info('Please!', 'Enter your search query!', 'Ok');
+      return;
+    } 
+      onSubmit(searchQuery);
+      setSearchQuery('');
   };
 
-  state={
-    searchQuery:'',
-  };
-  handleChangeInput = e => {
-    const searchQuery = e.target.value;
+  return (
+    <Header>
+      <Form onSubmit={onHandleSubmit}>
+        <Button type="submit">
+          <ImSearch
+            style={{ marginRight: 2, marginTop: 4, width: 25, height: 25 }}
+          />
+          <Label>Search</Label>
+        </Button>
+        <Input
+          type="text"
+          autocomplete="off"
+          autoFocus
+          placeholder="Search images and photos"
+          name="queryInput"
+          onChange={e => setSearchQuery(e.target.value)}
+        />
+      </Form>
+    </Header>
+  );
+};
 
-    this.setState({ searchQuery: searchQuery });
-  };
-
-  onHandleSubmit=event=>{
-  event.preventDefault();
-  if (this.state.searchQuery.trim() === ''){
-    Notiflix.Report.info ("Please!","Enter your search query!","Ok");
-    return;
-  }else{
-    this.props.onSubmit(this.state.searchQuery);
-    this.setState({searchQuery:''})
-  }};
-
-render(){
- return(
-   <Header>
-  <Form onSubmit={this.onHandleSubmit}>
-    <Button type="submit"><ImSearch style= {{marginRight: 2,
-                                              marginTop:4,
-                                              width:25,
-                                              height:25}}/>
-      <Label>Search</Label>
-    </Button>
-  <Input
-      type="text"
-      autocomplete="off"
-      autoFocus
-      placeholder="Search images and photos"
-      name='queryInput'
-      onChange={this.handleChangeInput}
-    />
-  </Form>
-  </Header>
-    )
-}}
-
+Searchbar.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+};
