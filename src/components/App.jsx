@@ -16,21 +16,24 @@ export const App = () => {
   const [page, setPage] = useState(1);
 
   useEffect(() => {
+    if (searchQuery === '') {
+      return;
+    }
     const fetchData = async () => {
-      if (searchQuery === '') {
-        return;
-      }
       setIsLoading(true);
       try {
         const data = await fetchImagesWithQuery(searchQuery, page);
         const totalPages = Math.ceil(data.totalHits / 12);
+
         if (page === 1) {
           Notiflix.Report.success(
             'Wonderful!',
             `We found ${data.totalHits} images!`,
             'Continue'
-          )}else{ setTimeout(() => scroll(), 100);}
-       
+          );
+        } else {
+          setTimeout(() => scroll(), 100);
+        }
 
         if (data.hits.length === 0) {
           Notiflix.Report.warning(
@@ -41,6 +44,7 @@ export const App = () => {
           return;
         }
         setHits(hits => [...hits, ...data.hits]);
+
         if (page >= totalPages) {
           Notiflix.Report.info(
             'Sorry!',
@@ -49,7 +53,9 @@ export const App = () => {
           );
           setShowLoadMoreBtn(false);
         }
-        setShowLoadMoreBtn(true);
+        if (page < totalPages) {
+          setShowLoadMoreBtn(true);
+        }
       } catch (error) {
         Error(true, Error);
       } finally {
@@ -60,11 +66,12 @@ export const App = () => {
   }, [page, searchQuery]);
 
   const onSubmit = inputValue => {
-    if(searchQuery!==inputValue){
-    setSearchQuery(inputValue);
-    setPage(1);
-    setHits([]);
-  }};
+    if (searchQuery !== inputValue) {
+      setSearchQuery(inputValue);
+      setPage(1);
+      setHits([]);
+    }
+  };
 
   const scroll = () => {
     const { clientHeight } = document.documentElement;
@@ -73,17 +80,17 @@ export const App = () => {
       behavior: 'smooth',
     });
   };
-
+ 
   return (
     <>
-      <Searchbar onSubmit={onSubmit} />
       <AppStyled>
+        <Searchbar onSubmit={onSubmit} />
         {hits.length !== 0 && <Gallery hits={hits} />}
         {isLoading ? (
           <Loader />
         ) : (
-          showLoadMoreBtn &&
-          hits.length !== 0 && (
+          hits.length !== 0 &&
+          showLoadMoreBtn && (
             <Button onLoadMore={() => setPage(page => page + 1)} />
           )
         )}
